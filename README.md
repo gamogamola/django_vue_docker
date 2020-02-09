@@ -1,4 +1,4 @@
-django_vue_docker
+docker_django_vuejs
 -------------------
 
 * Python 3.8
