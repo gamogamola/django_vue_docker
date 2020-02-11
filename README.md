@@ -2,7 +2,9 @@ docker_django_vuejs
 -------------------
 
 * Python 3.8
-* Django 2.2
+* Django 3.0.3
+* Node.js v12.14.1
+* Vue CLI v4.1.2
 
 
 ### 作成方法
@@ -131,11 +133,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: "python /app/manage.py runserver 0.0.0.0:8080"
+    command: "python /app/manage.py runserver 0.0.0.0:3000"
     volumes:
       - .:/app
     ports:
-      - "8080:8080"
+      - "3000:3000"
     env_file: .env
     links:
       - postgres
@@ -148,6 +150,50 @@ services:
       POSTGRES_DB: docker
       POSTGRES_USER: docker
       POSTGRES_PASSWORD: password
+~~~
+
+~~~
+docker-compose up -d
+~~~
+
+0.0.0.0:3000へアクセス
+
+~~~
+vue create frontend
+default
+cd frontend
+npm run serve
+~~~
+
+⚠️⚠️ .gitignoreに/node_modules/を入れること ⚠️⚠️
+
+~~~:ターミナル
+bash -c "mkdir -p docker/{django,vuejs} && mv Dockerfile docker/django/ && touch docker/vuejs/Dockerfile"
+~~~
+
+~~~
+pipenv install django-webpack-loader
+touch frontend/vue.config.js
+~~~
+
+~~~python:settings.py
+INSTALLED_APPS = (
+ ...
+ 'webpack_loader',
+)
+
+...
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': 'bundles/',
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+    }
+}
 ~~~
 
 ### 環境構築

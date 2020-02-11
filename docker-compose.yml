@@ -1,24 +1,40 @@
-version: "3.7"
+version: '3.7'
 
 services:
   django:
     build:
       context: .
-      dockerfile: Dockerfile
-    command: "python /app/manage.py runserver 0.0.0.0:8080"
+      dockerfile: docker/django/Dockerfile
+    command: 'python /app/manage.py runserver 0.0.0.0:3000'
     volumes:
       - .:/app
     ports:
-      - "8080:8080"
+      - '3000:3000'
     env_file: .env
     links:
       - postgres
 
+  vuejs:
+    build:
+      context: .
+      dockerfile: docker/vuejs/Dockerfile
+    command: 'sh /app/docker/vuejs/start-watch.sh'
+    volumes:
+      - .:/app
+      - node-modules-volume:/app/frontend/node_modules
+    ports:
+      - '8080:8080'
+    depends_on:
+      - django
+
   postgres:
     image: postgres:11
     ports:
-        - "5432:5432"
+        - '5432:5432'
     environment:
       POSTGRES_DB: docker
       POSTGRES_USER: docker
       POSTGRES_PASSWORD: password
+
+volumes:
+  node-modules-volume:
