@@ -217,7 +217,7 @@ docker-compose exec django python manage.py makemigrations
 
 #### デバッグ
 * コンテナへ入る
-    - docker exec -i -t django_vue_docker_django_1 bash
+    - docker exec -i -t docker_django_vuejs_vuejs_1 bash
 * 新しいメソッドの実行結果確認
     - Djangoではmanage.py shellで実装したメソッドなどが試せる
     `$ docker-compose exec django ./manage.py shell` でコンテナに入り、`メソッド名`を実行
@@ -228,3 +228,5 @@ docker-compose restart
 
 static/
 npm run buildした時に作られるimg,css,jsを格納
+
+docker-compose down --rmi all --volumes
